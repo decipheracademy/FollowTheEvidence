@@ -212,7 +212,7 @@ const Game = (() => {
     return `
     <div class="screen home-screen">
       <div class="folder-mark">📁</div>
-      <div class="eyebrow">MISSION LOG #2 · SKILL CHALLENGE FRIDAY</div>
+      <div class="eyebrow">MISSION LOG #3 · SKILL CHALLENGE FRIDAY</div>
       <h1 class="dossier-title">FOLLOW THE<br>EVIDENCE</h1>
       <p class="home-sub">Decipher Academy — Journey to Victory · Week 3</p>
       <button class="btn-primary" onclick="Game.goRegister()">BEGIN INVESTIGATION</button>
