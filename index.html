@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Follow the Evidence — Skill Challenge Friday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#14161a; --panel:#1c1f24; --panel-2:#22262c; --paper:#e9e6dd;
+  --ink:#26241f; --steel:#5b7c99; --steel-bright:#82a5c2; --alert:#c23b3b; --alert-bright:#e05a5a;
+  --text:#eceae4; --muted:#8b9099; --line:rgba(233,230,221,.12);
+  --font-display:'Oswald',sans-serif; --font-mono:'Space Mono',monospace; --font-body:'Source Serif 4',serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--void); color:var(--text); font-family:var(--font-body);
+  min-height:100vh; overflow-x:hidden; position:relative;
+}
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px}
+.screen{width:100%;max-width:640px;display:flex;flex-direction:column;align-items:center;text-align:center;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;color:var(--steel-bright);text-transform:uppercase;margin-bottom:10px}
+.dossier-title{font-family:var(--font-display);font-weight:700;font-size:clamp(34px,8vw,56px);letter-spacing:2px;line-height:1.05;margin-bottom:14px;text-transform:uppercase}
+.section-title{font-family:var(--font-display);font-weight:600;font-size:clamp(22px,5vw,30px);margin-bottom:20px;text-transform:uppercase;letter-spacing:.5px}
+.home-sub{color:var(--muted);font-size:14px;margin-bottom:34px}
+.folder-mark{font-size:44px;margin-bottom:8px}
+
+.btn-primary{
+  font-family:var(--font-display);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;font-size:15px;
+  background:linear-gradient(120deg,var(--alert),var(--alert-bright));color:#fff;border:none;border-radius:6px;
+  padding:15px 28px;cursor:pointer;width:100%;max-width:360px;margin-top:8px;
+  box-shadow:0 4px 14px rgba(194,59,59,.28);transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(194,59,59,.36)}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+  background:transparent;border:1px solid var(--line);border-radius:6px;padding:10px 18px;cursor:pointer;margin-top:16px;
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--steel)}
+
+.field-group{width:100%;max-width:380px;text-align:left;margin-bottom:16px}
+.field-group label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:1.5px;color:var(--steel-bright);text-transform:uppercase;display:block;margin-bottom:6px}
+.field-group input{width:100%;padding:13px 14px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-size:15px;font-family:var(--font-body)}
+.field-group input:focus{outline:none;border-color:var(--steel)}
+.error-msg{color:var(--alert-bright);font-family:var(--font-mono);font-size:12px;margin-top:10px;min-height:16px}
+
+.grade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:420px}
+.grade-btn{
+  font-family:var(--font-mono);font-size:14px;font-weight:700;background:var(--panel);border:1px solid var(--line);
+  color:var(--text);border-radius:6px;padding:16px 6px;cursor:pointer;transition:all .15s ease;
+}
+.grade-btn:hover{border-color:var(--steel);background:var(--panel-2);transform:translateY(-2px)}
+
+.dossier-card{
+  background:var(--paper);color:var(--ink);border-radius:4px;padding:24px;text-align:left;width:100%;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);margin-bottom:20px;font-size:15px;line-height:1.65;
+}
+.dossier-rule{border:none;border-top:1px dashed rgba(38,36,31,.3);margin:16px 0}
+.mission-log-text{font-style:italic;color:#4a473e;font-size:14px}
+
+.round-header{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+.progress-dots{display:flex;gap:6px;justify-content:center;margin-bottom:18px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dot.done{background:var(--steel)}
+.dot.active{background:var(--alert);box-shadow:0 0 0 3px rgba(194,59,59,.25)}
+
+.integrity-wrap{width:100%;text-align:left}
+.integrity-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px}
+.integrity-track{height:6px;background:var(--panel-2);border-radius:3px;overflow:hidden}
+.integrity-fill{height:100%;background:linear-gradient(90deg,var(--alert),var(--steel-bright));transition:width .4s ease}
+
+.case-board{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin:14px 0;
+  min-height:90px;position:relative;
+}
+.case-board-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--steel-bright);text-transform:uppercase;margin-bottom:10px;text-align:left}
+.board-svg{width:100%;height:60px}
+.board-pin{fill:var(--alert-bright)}
+.board-string{stroke:var(--alert);stroke-width:2;stroke-dasharray:200;stroke-dashoffset:0;animation:drawString .5s ease}
+@keyframes drawString{from{stroke-dashoffset:200}to{stroke-dashoffset:0}}
+
+.conclusion-cards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.conclusion-card{
+  background:var(--paper);color:var(--ink);border-radius:4px;padding:10px 12px;font-size:12.5px;text-align:left;
+  min-width:120px;flex:1 1 140px;position:relative;transition:all .3s ease;font-family:var(--font-mono);
+}
+.conclusion-letter{font-weight:700;color:var(--alert);margin-right:6px}
+.conclusion-card.eliminated{opacity:.35;text-decoration:line-through;background:#3a3a3a;color:#999}
+
+.question-card{width:100%;text-align:left}
+.q-text{font-size:17px;line-height:1.55;margin-bottom:18px;font-weight:600}
+.answer-input{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--text);
+  padding:14px;font-size:15px;font-family:var(--font-body);resize:vertical;min-height:100px;
+}
+.answer-input:focus{outline:none;border-color:var(--steel)}
+.one-shot-note{font-family:var(--font-mono);font-size:11px;color:var(--alert-bright);margin:10px 0}
+
+.seq-arranged{width:100%;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.seq-slot{background:var(--panel);border:1px solid var(--steel);border-radius:6px;padding:10px 14px;font-size:14px;text-align:left}
+.seq-slot-empty{color:var(--muted);font-family:var(--font-mono);font-size:12px;text-align:center;padding:14px;border:1px dashed var(--line);border-radius:6px}
+.seq-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.seq-chip{
+  background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:9px 12px;
+  font-size:13px;cursor:pointer;transition:all .15s ease;
+}
+.seq-chip:hover{border-color:var(--steel);background:var(--panel)}
+
+.feedback-screen{padding-top:60px}
+.stamp{
+  font-family:var(--font-display);font-weight:700;font-size:clamp(24px,6vw,36px);letter-spacing:3px;
+  border:5px solid currentColor;border-radius:8px;padding:16px 28px;display:inline-block;text-transform:uppercase;
+  transform:rotate(-4deg);margin-bottom:20px;animation:stampDown .35s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes stampDown{from{transform:rotate(-4deg) scale(2.4);opacity:0}to{transform:rotate(-4deg) scale(1);opacity:1}}
+.stamp-confirmed{color:var(--steel-bright)}
+.stamp-unreliable{color:var(--alert-bright)}
+.stamp-secured{color:var(--steel-bright)}
+.fb-points{font-family:var(--font-mono);font-size:20px;margin-bottom:24px}
+.fb-correct .fb-points{color:var(--steel-bright)}
+.fb-wrong .fb-points{color:var(--alert-bright)}
+
+.transition-screen{padding-top:40px}
+.transition-line{font-size:16px;line-height:1.6;color:var(--muted);margin:20px 0 26px;font-style:italic}
+
+.already-played-banner{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:2px;color:var(--alert-bright);
+  border:1px solid var(--alert);border-radius:6px;padding:12px 18px;margin-bottom:18px;
+  text-transform:uppercase;background:rgba(194,59,59,.08);
+}
+.results-screen{padding-top:20px}
+.mission-complete-text{font-size:14.5px;line-height:1.7;color:var(--muted);margin:18px 0 26px}
+.score-summary{margin-bottom:24px}
+.score-big{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--steel-bright)}
+.score-sub{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-top:4px}
+.verify-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:20px;width:100%}
+.verify-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--steel-bright)}
+.verify-code{font-family:var(--font-mono);font-size:28px;font-weight:700;letter-spacing:3px;margin:8px 0}
+.verify-hint{font-size:12px;color:var(--muted)}
+
+.facilitator-panel{width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:16px}
+.facilitator-panel summary{cursor:pointer;font-family:var(--font-mono);font-size:12px;letter-spacing:1px;color:var(--steel-bright);text-transform:uppercase}
+.log-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px}
+.log-table th,.log-table td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.log-table th{font-family:var(--font-mono);color:var(--muted);font-weight:400}
+.log-q{max-width:220px}
+.override-btn{font-family:var(--font-mono);font-size:10px;background:var(--steel);color:#fff;border:none;border-radius:4px;padding:4px 8px;cursor:pointer}
+tr.overridden{background:rgba(91,124,153,.08)}
+
+@media (max-width:480px){
+  .grade-grid{grid-template-columns:repeat(2,1fr)}
+  .dossier-card{padding:18px}
+  .log-table{font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="data.js"></script>
+<script src="audio.js"></script>
+<script src="fx.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
